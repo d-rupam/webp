@@ -19,20 +19,15 @@
     </label>
     <input type="file" id="upload" accept="image/*">
     
-    <button id="convert-btn" disabled>Convert to WebP</button>
-    
-    <div id="progress-wrap" class="progress-wrap">
+    <div id="progress-wrap" class="progress-wrap" style="display:none;">
         <div id="progress-bar" class="progress-bar"></div>
     </div>
     
-    <a id="download-link" class="download-btn" style="display:none;">Download WebP</a>
-
-    <div id="stats"></div>
-</div>
+    <button id="convert-btn" disabled>Convert to WebP</button>
     
     <a id="download-link" class="download-btn" style="display:none;">Download WebP</a>
-
-    <div id="stats"></div>
+    <div id="stats" style="display:none;"></div>
+    <button id="reset-btn" class="secondary-btn" style="display:none;">Convert Another</button>
 </div>
 
 <script src="script.js?v=3"></script>
