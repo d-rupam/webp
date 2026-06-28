@@ -170,10 +170,7 @@ button:hover:not(:disabled) {
     transition: transform 0.2s;
 }
 
-/* Optional: If you want the About icon to also be white */
-.footer-links a img {
-    filter: invert(1);
-}
+
 
 .seo-box {
     margin-top: 2rem;
