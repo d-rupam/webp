@@ -24,14 +24,12 @@ body {
     padding: 2rem; 
     border-radius: 1rem; 
     box-shadow: 0 10px 25px rgba(0,0,0,0.3); 
-    width: 90%; 
-    max-width: 400px; 
+    width: 95%; /* Takes up most of the screen on mobile */
+    max-width: 900px; /* Expands massively for PC, giving that "pro app" feel */
     display: flex; 
     flex-direction: column; 
-    gap: 1.25rem; 
+    gap: 1.5rem; 
 }
-
-h1 { margin: 0; color: var(--primary); text-align: center; font-size: 1.5rem; }
 
 .upload-area { 
     border: 2px dashed #475569; 
@@ -39,10 +37,23 @@ h1 { margin: 0; color: var(--primary); text-align: center; font-size: 1.5rem; }
     border-radius: 0.5rem; 
     cursor: pointer; 
     transition: 0.3s; 
-    text-align: center;
     color: #94a3b8;
+    
+    /* NEW: The Canvas Effect */
+    min-height: 45vh; /* Forces the box to take up 45% of the screen height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25rem;
+    font-weight: 500;
 }
-.upload-area:hover { border-color: var(--primary); color: var(--primary); }
+
+.upload-area:hover { 
+    border-color: var(--primary); 
+    color: var(--primary); 
+    background: rgba(99, 102, 241, 0.05); /* Adds a subtle glow when dragging */
+}
 
 
 button, .download-btn { 
