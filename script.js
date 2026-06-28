@@ -6,14 +6,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropZone = document.getElementById('drop-zone');
     const progressWrap = document.getElementById('progress-wrap');
     const progressBar = document.getElementById('progress-bar');
+    
+    // Preview Elements
+    const previewContainer = document.getElementById('preview-container');
+    const previewImage = document.getElementById('preview-image');
 
-    let currentFile = null; // Stores the file globally for the convert button
+    let currentFile = null; 
 
     // ==========================================
-    // 🧬 CENTRAL FILE PROCESSOR
+    // 🧬 CENTRAL FILE PROCESSOR & PREVIEW GENERATOR
     // ==========================================
-    // This function resets the UI and readies the file, 
-    // regardless of whether it was clicked, dragged, or pasted.
     function processInputFile(file) {
         if (!file || !file.type.startsWith('image/')) {
             alert('Please provide a valid image file.');
@@ -21,8 +23,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         currentFile = file;
-        dropZone.textContent = "Ready: " + file.name;
+        dropZone.textContent = "Loaded: " + file.name;
         convertBtn.disabled = false;
+        
+        // Generate the Image Preview instantly
+        const previewUrl = URL.createObjectURL(file);
+        previewImage.src = previewUrl;
+        previewContainer.style.display = 'block';
         
         // Reset the UI for a new conversion
         stats.style.display = 'none';
@@ -34,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==========================================
-    // 1. CLICK UPLOAD (Existing Method)
+    // 1. CLICK UPLOAD 
     // ==========================================
     upload.addEventListener('change', (e) => {
         if (e.target.files.length > 0) {
@@ -45,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // 2. DRAG & DROP METHOD
     // ==========================================
-    // Prevent the browser's default behavior (which is to open the file in a new tab)
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, preventDefaults, false);
         document.body.addEventListener(eventName, preventDefaults, false);
@@ -56,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
         e.stopPropagation();
     }
 
-    // Add visual feedback when hovering a file over the zone
     ['dragenter', 'dragover'].forEach(eventName => {
         dropZone.addEventListener(eventName, () => {
             dropZone.style.borderColor = 'var(--primary)'; 
@@ -71,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, false);
     });
 
-    // Capture the file when it is dropped
     dropZone.addEventListener('drop', (e) => {
         const dt = e.dataTransfer;
         const files = dt.files;
@@ -89,11 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = items[index];
             if (item.kind === 'file' && item.type.startsWith('image/')) {
                 const blob = item.getAsFile();
-                // Browsers often name pasted files generically (e.g., "image.png"). 
-                // We assign a dynamic name to keep the downloads organized.
                 const file = new File([blob], "clipboard-capture-" + Date.now() + ".png", { type: item.type });
                 processInputFile(file);
-                break; // Stop after grabbing the first image
+                break; 
             }
         }
     });
@@ -121,8 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     progressBar.style.width = '100%';
                     progressBar.style.backgroundColor = '#10b981'; 
                     
-                    const url = URL.createObjectURL(result);
-                    downloadLink.href = url;
+                    // Optional: Update the preview image with the compressed version
+                    const resultUrl = URL.createObjectURL(result);
+                    previewImage.src = resultUrl; 
+                    
+                    downloadLink.href = resultUrl;
                     downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
                     
                     downloadLink.style.display = 'block';
