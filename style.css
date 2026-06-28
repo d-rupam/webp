@@ -31,28 +31,38 @@ body {
     gap: 1.5rem; 
 }
 
+/* Update the upload area to handle the image overlay */
 .upload-area { 
     border: 2px dashed #475569; 
-    padding: 2rem; 
+    padding: 1rem; /* Reduced padding so the image can stretch further */
     border-radius: 0.5rem; 
     cursor: pointer; 
     transition: 0.3s; 
     color: #94a3b8;
     
-    /* NEW: The Canvas Effect */
-    min-height: 45vh; /* Forces the box to take up 45% of the screen height */
+    min-height: 45vh; 
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 1.25rem;
     font-weight: 500;
+    position: relative; /* Crucial for keeping the image contained */
+    overflow: hidden;
 }
 
 .upload-area:hover { 
     border-color: var(--primary); 
     color: var(--primary); 
-    background: rgba(99, 102, 241, 0.05); /* Adds a subtle glow when dragging */
+    background: rgba(99, 102, 241, 0.05); 
+}
+
+/* Make the image responsive inside the drop zone */
+#preview-image {
+    max-width: 100%;
+    max-height: 40vh; /* Keeps it strictly inside the box */
+    object-fit: contain; /* This fixes the portrait issue. It shrinks without stretching or leaving black bars! */
+    border-radius: 0.25rem;
 }
 
 
