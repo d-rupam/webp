@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadLink = document.getElementById('download-link');
     const stats = document.getElementById('stats');
     const dropZone = document.getElementById('drop-zone');
-    const progressWrap = document.getElementById('progress-wrap');
-    const progressBar = document.getElementById('progress-bar');
     const resetBtn = document.getElementById('reset-btn');
     const dropText = document.getElementById('drop-text');
     const previewImage = document.getElementById('preview-image');
@@ -18,15 +16,14 @@ document.addEventListener('DOMContentLoaded', () => {
         dropText.style.display = 'block';
         previewImage.style.display = 'none';
         previewImage.src = '';
+        
         convertBtn.style.display = 'block';
         convertBtn.textContent = "Convert to WebP";
         convertBtn.disabled = true;
+        
         downloadLink.style.display = 'none';
         stats.style.display = 'none';
         resetBtn.style.display = 'none';
-        progressWrap.style.display = 'none';
-        progressBar.style.transition = 'none';
-        progressBar.style.width = '0%';
     }
 
     function processInputFile(file) {
@@ -64,32 +61,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // CONVERSION ENGINE (Restored to working status)
+    // CONVERSION ENGINE (Direct & Instant)
     convertBtn.addEventListener('click', () => {
         if (!currentFile) return;
 
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
-        progressWrap.style.display = 'block';
-        progressBar.style.transition = 'width 1.5s linear';
-        progressBar.style.width = '100%';
 
         new Compressor(currentFile, {
             quality: 0.8,
             mimeType: 'image/webp',
             success(result) {
-                setTimeout(() => {
-                    progressWrap.style.display = 'none';
-                    convertBtn.style.display = 'none';
-                    const url = URL.createObjectURL(result);
-                    previewImage.src = url; 
-                    downloadLink.href = url;
-                    downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
-                    downloadLink.style.display = 'block';
-                    stats.style.display = 'block';
-                    resetBtn.style.display = 'block';
-                    stats.innerHTML = `Original: ${(currentFile.size/1024).toFixed(2)}KB<br>Converted: ${(result.size/1024).toFixed(2)}KB<br><strong>Saved: ${(((currentFile.size - result.size)/currentFile.size)*100).toFixed(1)}%</strong>`;
-                }, 1500); // Matches transition duration
+                // Instantly update the UI
+                convertBtn.style.display = 'none';
+                
+                const url = URL.createObjectURL(result);
+                previewImage.src = url; 
+                
+                downloadLink.href = url;
+                downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+                
+                downloadLink.style.display = 'block';
+                stats.style.display = 'block';
+                resetBtn.style.display = 'block';
+                
+                const initialSize = (currentFile.size / 1024).toFixed(2);
+                const finalSize = (result.size / 1024).toFixed(2);
+                const saved = (((currentFile.size - result.size) / currentFile.size) * 100).toFixed(1);
+                
+                stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong>Saved: ${saved}%</strong>`;
             },
             error(err) {
                 console.error(err);
