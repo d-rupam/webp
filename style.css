@@ -122,11 +122,9 @@ button:hover:not(:disabled) {
 .progress-bar { 
     width: 0%; 
     height: 100%; 
-    /* A beautiful liquid gradient moving horizontally */
-    background: linear-gradient(90deg, #3b82f6, #6366f1, #8b5cf6, #3b82f6);
-    background-size: 300% 100%;
-    animation: waterFlow 2s linear infinite; /* The water moving effect */
-    border-radius: 5px;
+    background: linear-gradient(90deg, #3b82f6, #6366f1);
+    /* No animation here - let JS control the flow */
+    transition: width 2.5s cubic-bezier(0.1, 0.7, 0.3, 1); 
 }
 
 /* This keyframe makes the gradient constantly slide, looking like a flowing pipe */
