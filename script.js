@@ -1,4 +1,3 @@
-// Ensure Compressor.js is loaded before running
 document.addEventListener('DOMContentLoaded', () => {
     const upload = document.getElementById('upload');
     const convertBtn = document.getElementById('convert-btn');
@@ -6,54 +5,57 @@ document.addEventListener('DOMContentLoaded', () => {
     const stats = document.getElementById('stats');
     const dropZone = document.getElementById('drop-zone');
 
-    let selectedFile = null;
-
-    // Handle File Selection
     upload.addEventListener('change', (e) => {
-        selectedFile = e.target.files[0];
-        if (selectedFile) {
-            dropZone.textContent = "Selected: " + selectedFile.name;
+        const file = e.target.files[0];
+        if (file) {
+            console.log("File selected:", file.name);
+            dropZone.textContent = "File: " + file.name;
             convertBtn.disabled = false;
+            
+            // Hide previous results
             stats.style.display = 'none';
             downloadLink.style.display = 'none';
         }
     });
 
-    // Handle Conversion
     convertBtn.addEventListener('click', () => {
-        if (!selectedFile) return;
+        const file = upload.files[0];
+        if (!file) return;
 
-        // Change button state during processing
+        // Change button to show progress
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
 
-        new Compressor(selectedFile, {
+        new Compressor(file, {
             quality: 0.8,
             mimeType: 'image/webp',
             success(result) {
+                console.log("Conversion successful!");
                 const url = URL.createObjectURL(result);
                 
-                // Set up download link
+                // Update download link
                 downloadLink.href = url;
-                downloadLink.download = selectedFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+                downloadLink.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
                 
-                // Display results
+                // Show elements
                 downloadLink.style.display = 'block';
                 stats.style.display = 'block';
                 
-                const initialSize = (selectedFile.size / 1024).toFixed(2);
+                // Calculate and display stats
+                const initialSize = (file.size / 1024).toFixed(2);
                 const finalSize = (result.size / 1024).toFixed(2);
-                const saved = (((selectedFile.size - result.size) / selectedFile.size) * 100).toFixed(1);
+                const saved = (((file.size - result.size) / file.size) * 100).toFixed(1);
                 
                 stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong>Saved: ${saved}%</strong>`;
                 
-                // Reset button
+                // Reset button text
                 convertBtn.textContent = "Convert to WebP";
                 convertBtn.disabled = false;
             },
             error(err) {
-                console.error(err.message);
-                convertBtn.textContent = "Error!";
+                console.error("Compression error:", err);
+                convertBtn.textContent = "Error! Try again.";
+                convertBtn.disabled = false;
             },
         });
     });
