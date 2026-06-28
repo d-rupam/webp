@@ -2,6 +2,10 @@
 
 A client-side, high-performance image-to-WebP conversion utility designed for zero-latency, private digital infrastructure.
 
+<p align="center">
+  <img src="dashboard.png" alt="Dashboard Preview" style="max-width: 100%; height: auto; border-radius: 8px;">
+</p>
+
 ## ⚙️ Overview
 This utility allows for the aggressive compression of high-resolution imagery into the modern WebP format. By utilizing client-side processing, this tool ensures:
 
