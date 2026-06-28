@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebP Converter</title>
     
-    <link rel="stylesheet" href="style.css?v=2">
+    <link rel="stylesheet" href="style.css?v=3">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/compressorjs/1.2.1/compressor.min.js"></script>
 </head>
 <body>
@@ -13,8 +13,13 @@
 <div class="container">
     <h1>WebP Converter</h1>
     
-    <label for="upload" class="upload-area" id="drop-zone">Click to select image</label>
+    <label for="upload" class="upload-area" id="drop-zone">Click, Drag, or Paste (CTRL+V) an image here</label>
     <input type="file" id="upload" accept="image/*">
+    
+    <!-- New Preview Container -->
+    <div id="preview-container" class="preview-container" style="display: none;">
+        <img id="preview-image" src="" alt="Image Preview">
+    </div>
     
     <button id="convert-btn" disabled>Convert to WebP</button>
     
@@ -27,6 +32,6 @@
     <div id="stats"></div>
 </div>
 
-<script src="script.js?v=2"></script>
+<script src="script.js?v=3"></script>
 </body>
 </html>
