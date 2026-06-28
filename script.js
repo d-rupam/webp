@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const stats = document.getElementById('stats');
     const dropZone = document.getElementById('drop-zone');
     
-    // Progress Bar Elements
+    
     const progressWrap = document.getElementById('progress-wrap');
     const progressBar = document.getElementById('progress-bar');
 
@@ -15,12 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
             dropZone.textContent = "File: " + file.name;
             convertBtn.disabled = false;
             
-            // Reset UI for a fresh start
+            
             stats.style.display = 'none';
             downloadLink.style.display = 'none';
             progressWrap.style.display = 'none';
             progressBar.style.width = '0%';
-            progressBar.style.backgroundColor = '#ef4444'; // Red
+            progressBar.style.backgroundColor = '#ef4444'; 
             convertBtn.textContent = "Convert to WebP";
         }
     });
@@ -32,31 +32,31 @@ document.addEventListener('DOMContentLoaded', () => {
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
         
-        // 1. Show the progress bar container
+        
         progressWrap.style.display = 'block';
         
-        // 2. Start animation to 40% and turn Orange
+        
         requestAnimationFrame(() => {
             progressBar.style.width = '40%';
-            progressBar.style.backgroundColor = '#f59e0b'; // Orange
+            progressBar.style.backgroundColor = '#f59e0b'; 
         });
 
-        // 3. Pause for a tiny moment so the browser can draw the red/orange bar
+        
         setTimeout(() => {
             new Compressor(file, {
                 quality: 0.8,
                 mimeType: 'image/webp',
                 success(result) {
                     
-                    // 4. On success, jump to 100% and turn Green
+                    
                     progressBar.style.width = '100%';
-                    progressBar.style.backgroundColor = '#10b981'; // Green
+                    progressBar.style.backgroundColor = '#10b981'; 
                     
                     const url = URL.createObjectURL(result);
                     downloadLink.href = url;
                     downloadLink.download = file.name.replace(/\.[^/.]+$/, "") + ".webp";
                     
-                    // Show final buttons and stats
+                    
                     downloadLink.style.display = 'block';
                     stats.style.display = 'block';
                     
@@ -75,6 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     convertBtn.disabled = false;
                 },
             });
-        }, 150); // The magic 150-millisecond delay
+        }, 150); 
     });
 });
