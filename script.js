@@ -86,54 +86,48 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     // ⚙️ CONVERSION ENGINE (Optimized Flow)
     // ==========================================
-    convertBtn.addEventListener('click', () => {
+convertBtn.addEventListener('click', () => {
         if (!currentFile) return;
 
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
         progressWrap.style.display = 'block';
         
-        // Setup smooth water-flow transition
-        progressBar.style.transition = 'width 1.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        progressBar.style.width = '90%';
+        // Reset and start the flow immediately
+        progressBar.style.transition = 'width 2.5s cubic-bezier(0.1, 0.7, 0.3, 1)';
+        progressBar.style.width = '100%';
 
-        setTimeout(() => {
-            new Compressor(currentFile, {
-                quality: 0.8,
-                mimeType: 'image/webp',
-                success(result) {
-                    // Smoothly finish the final stretch
-                    progressBar.style.transition = 'width 0.4s ease-out';
-                    progressBar.style.width = '100%';
-                    
-                    setTimeout(() => {
-                        progressWrap.style.display = 'none';
-                        convertBtn.style.display = 'none';
-                        
-                        const resultUrl = URL.createObjectURL(result);
-                        previewImage.src = resultUrl; 
-                        
-                        downloadLink.href = resultUrl;
-                        downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
-                        
-                        downloadLink.style.display = 'block';
-                        stats.style.display = 'block';
-                        resetBtn.style.display = 'block';
-                        
-                        const initialSize = (currentFile.size / 1024).toFixed(2);
-                        const finalSize = (result.size / 1024).toFixed(2);
-                        const saved = (((currentFile.size - result.size) / currentFile.size) * 100).toFixed(1);
-                        
-                        stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong style="color: var(--success);">Saved: ${saved}%</strong>`;
-                    }, 450); // Matches the final transition timing
-                },
-                error(err) {
-                    console.error("Compression error:", err);
-                    convertBtn.textContent = "Error! Try again.";
-                    convertBtn.disabled = false;
+        new Compressor(currentFile, {
+            quality: 0.8,
+            mimeType: 'image/webp',
+            success(result) {
+                // When compression finishes, wait for the bar to finish its glide
+                setTimeout(() => {
                     progressWrap.style.display = 'none';
-                },
-            });
-        }, 150); 
+                    convertBtn.style.display = 'none';
+                    
+                    const resultUrl = URL.createObjectURL(result);
+                    previewImage.src = resultUrl; 
+                    
+                    downloadLink.href = resultUrl;
+                    downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
+                    
+                    downloadLink.style.display = 'block';
+                    stats.style.display = 'block';
+                    resetBtn.style.display = 'block';
+                    
+                    const initialSize = (currentFile.size / 1024).toFixed(2);
+                    const finalSize = (result.size / 1024).toFixed(2);
+                    const saved = (((currentFile.size - result.size) / currentFile.size) * 100).toFixed(1);
+                    
+                    stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong style="color: var(--success);">Saved: ${saved}%</strong>`;
+                }, 2500); // Wait for the 2.5s transition to finish
+            },
+            error(err) {
+                console.error("Compression error:", err);
+                convertBtn.textContent = "Error! Try again.";
+                convertBtn.disabled = false;
+                progressWrap.style.display = 'none';
+            },
+        });
     });
-});
