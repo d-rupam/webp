@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // ==========================================
     function resetUI() {
         currentFile = null;
-        upload.value = ''; // Clear file input
+        upload.value = ''; 
         dropText.style.display = 'block';
         previewImage.style.display = 'none';
         previewImage.src = '';
@@ -30,18 +30,19 @@ document.addEventListener('DOMContentLoaded', () => {
         stats.style.display = 'none';
         resetBtn.style.display = 'none';
         progressWrap.style.display = 'none';
+        
+        // Reset bar transition and width
+        progressBar.style.transition = 'none';
         progressBar.style.width = '0%';
     }
-
+    
     function processInputFile(file) {
         if (!file || !file.type.startsWith('image/')) {
             alert('Please provide a valid image file.');
             return;
         }
         
-        // Reset the UI states before loading new file
         resetUI(); 
-        
         currentFile = file;
         convertBtn.disabled = false;
         
@@ -51,11 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         previewImage.style.display = 'block';
     }
 
-    // Event Listener for the new "Convert Another" button
     resetBtn.addEventListener('click', resetUI);
 
     // ==========================================
-    // INPUT LISTENERS (Click, Drag, Paste)
+    // INPUT LISTENERS
     // ==========================================
     upload.addEventListener('change', (e) => {
         if (e.target.files.length > 0) processInputFile(e.target.files[0]);
@@ -64,20 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
         dropZone.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
         document.body.addEventListener(eventName, e => { e.preventDefault(); e.stopPropagation(); }, false);
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.style.borderColor = 'var(--primary)'; 
-            dropZone.style.color = 'var(--primary)';
-        }, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.style.borderColor = '#475569'; 
-            dropZone.style.color = '#94a3b8';
-        }, false);
     });
 
     dropZone.addEventListener('drop', (e) => {
@@ -98,34 +84,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // ==========================================
-    // ⚙️ STATE 2 & 3: CONVERSION ENGINE
+    // ⚙️ CONVERSION ENGINE (Optimized Flow)
     // ==========================================
     convertBtn.addEventListener('click', () => {
         if (!currentFile) return;
 
-        // Enter State 2: Processing
         convertBtn.textContent = "Converting...";
         convertBtn.disabled = true;
         progressWrap.style.display = 'block';
         
-        // Start smooth fake progress up to 90%
-        requestAnimationFrame(() => {
-            progressBar.style.width = '90%';
-        });
+        // Setup smooth water-flow transition
+        progressBar.style.transition = 'width 1.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        progressBar.style.width = '90%';
 
         setTimeout(() => {
             new Compressor(currentFile, {
                 quality: 0.8,
                 mimeType: 'image/webp',
                 success(result) {
-                    // Push progress to 100%
+                    // Smoothly finish the final stretch
+                    progressBar.style.transition = 'width 0.4s ease-out';
                     progressBar.style.width = '100%';
                     
-                    // Wait a tiny fraction of a second for the bar to hit 100% smoothly
                     setTimeout(() => {
-                        // Enter State 3: Done
-                        progressWrap.style.display = 'none'; // Hide progress bar
-                        convertBtn.style.display = 'none';   // Hide convert button
+                        progressWrap.style.display = 'none';
+                        convertBtn.style.display = 'none';
                         
                         const resultUrl = URL.createObjectURL(result);
                         previewImage.src = resultUrl; 
@@ -133,7 +116,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         downloadLink.href = resultUrl;
                         downloadLink.download = currentFile.name.replace(/\.[^/.]+$/, "") + ".webp";
                         
-                        // Show Final UI Elements
                         downloadLink.style.display = 'block';
                         stats.style.display = 'block';
                         resetBtn.style.display = 'block';
@@ -143,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const saved = (((currentFile.size - result.size) / currentFile.size) * 100).toFixed(1);
                         
                         stats.innerHTML = `Original: ${initialSize}KB<br>Converted: ${finalSize}KB<br><strong style="color: var(--success);">Saved: ${saved}%</strong>`;
-                    }, 300);
+                    }, 450); // Matches the final transition timing
                 },
                 error(err) {
                     console.error("Compression error:", err);
