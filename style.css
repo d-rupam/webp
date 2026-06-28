@@ -141,3 +141,18 @@ button:hover:not(:disabled) {
 #upload { 
     display: none; 
 }
+
+.footer-links { text-align: center; margin-top: 2rem; }
+
+.seo-box {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: #1e293b;
+    border-radius: 0.5rem;
+    border-left: 4px solid var(--primary);
+    color: #94a3b8;
+    font-size: 0.85rem;
+}
+.seo-box h3 { color: var(--text); margin-top: 0; }
+
+
