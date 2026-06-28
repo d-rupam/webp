@@ -170,7 +170,9 @@ button:hover:not(:disabled) {
     transition: transform 0.2s;
 }
 
-
+.footer-links a img {
+    filter: invert(1);
+}
 
 .seo-box {
     margin-top: 2rem;
